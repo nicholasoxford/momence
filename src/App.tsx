@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import "./App.css";
-import { curencyInfo } from "./types";
+import { columnHeaders, curencyInfo } from "./types";
+import { Table } from "./components/table";
 const queryClient = new QueryClient();
 
 const Title = styled.h1`
@@ -10,28 +10,7 @@ const Title = styled.h1`
   text-align: center;
   color: palevioletred;
 `;
-const Table = styled.table`
-  border-collapse: collapse;
-  margin: 25px 0;
-  font-size: 0.9em;
-  font-family: sans-serif;
-  min-width: 400px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-`;
 
-const THead = styled.thead`
-  background-color: #009879;
-  color: #ffffff;
-  text-align: left;
-`;
-
-const TR = styled.tr`
-  padding: 12px 15px;
-`;
-
-const TD = styled.td`
-  padding: 12px 15px;
-`;
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -41,6 +20,16 @@ function App() {
   );
 }
 
+// because this is type columnHeaders, if we try to pass in
+// a header that doesnt relate to the type, it will throw a compile error
+const columns: columnHeaders = {
+  Country: "Country",
+  Currency: "Currency",
+  Code: "Code",
+  Amount: "Amount",
+  Rate: "Rate",
+};
+
 // valueof
 const fetchUsers = async () => {
   const res = await fetch("/daily.txt");
@@ -48,10 +37,10 @@ const fetchUsers = async () => {
   const textArray = textInfo.split(/\r?\n/);
   // if is not equeal to type textFormat return
   const result = textArray.map((item, index) => {
-    if (index === 0) return null;
+    // first lets parse out the date
 
-    if (item !== "Country|Currency|Amount|Code|Rate") {
-      // parse the text into type extracTData
+    // if the row isn't equal to the info row, return
+    if (index !== 0 && item !== "Country|Currency|Amount|Code|Rate") {
       const parsedText: curencyInfo = {
         Country: item.split("|")[0],
         Currency: item.split("|")[1],
@@ -59,10 +48,13 @@ const fetchUsers = async () => {
         Code: item.split("|")[3],
         Rate: item.split("|")[4],
       };
+      if (parsedText.Country === "" || parsedText.Currency === null)
+        return null;
       return parsedText;
     }
     return null;
   });
+  console.log(result);
   return result;
 };
 
@@ -78,33 +70,32 @@ function DataDisplay() {
         flexDirection: "column",
       }}
     >
-      <h2>React Query</h2>
+      <h2>Czech National Bank</h2>
       <p>Status: {status}</p>
       <Table>
-        <THead>
-          <TR>
-            <th>Country</th>
-            <th>Currency</th>
-            <th>Amount</th>
-            <th>Code</th>
-            <th>Rate</th>
-          </TR>
-        </THead>
-        <tbody>
-          {data &&
-            data.map(
-              (countryInfo, key) =>
+        <table>
+          <thead>
+            <tr>
+              {Object.values(columns).map((item, index) => (
+                <th key={index}>{item}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {data?.map(
+              (countryInfo, index) =>
                 countryInfo && (
-                  <tr key={key}>
-                    <TD>{countryInfo.Country}</TD>
-                    <TD>{countryInfo.Currency}</TD>
-                    <TD>{countryInfo.Amount}</TD>
-                    <TD>{countryInfo.Code}</TD>
-                    <TD>{countryInfo.Rate}</TD>
+                  <tr key={index}>
+                    <td>{countryInfo?.Country}</td>
+                    <td>{countryInfo?.Currency}</td>
+                    <td>{countryInfo?.Code}</td>
+                    <td>{countryInfo?.Amount}</td>
+                    <td>{countryInfo?.Rate}</td>
                   </tr>
                 )
             )}
-        </tbody>
+          </tbody>
+        </table>
       </Table>
     </div>
   );

@@ -8,8 +8,7 @@ export type curencyInfo = {
   Rate: string;
 };
 
-// Was using this as a small utility function to get the value of a key in an object
-
+// This type would be useful if another key was added to the response, i.e. Country|Currency|Amount|Code|Rate|Debt
 export type extractData<currencyInfo extends string> =
   currencyInfo extends `${infer Country}|${infer Currency}|${infer Amount}|${infer Code}|${infer Rate}`
     ? {
@@ -20,3 +19,8 @@ export type extractData<currencyInfo extends string> =
         Rate: Rate;
       }
     : never;
+
+export type textFormat = "Country|Currency|Amount|Code|Rate";
+
+// getting our headers from the format string
+export type columnHeaders = extractData<textFormat>;
