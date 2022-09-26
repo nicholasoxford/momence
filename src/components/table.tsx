@@ -1,46 +1,43 @@
-import styled from "styled-components";
+import { columnHeaders, curencyInfo } from "../utils/types";
+import { Table } from "./styles";
 
-/* Pssst this has the rest of the styling we've been using
-to give our table borders and non-ugly spacing */
+// Typescript helps us enforce column headers based on info string
+// Obviously this is a contrived example, but it's a good example of how you can use
+// typescript to empower other developers
+const columns: columnHeaders = {
+  Country: "Country",
+  Currency: "Currency",
+  Code: "Code",
+  Amount: "Amount",
+  Rate: "Rate",
+};
 
-export const Table = styled.div`
-  div {
-    height: 500px;
-  }
-  table {
-    border-collapse: collapse;
-    margin: 25px 0;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-
-    tr {
-      padding: 12px 15px;
-      :last-child {
-        td {
-          border-bottom: 0;
-        }
-      }
-    }
-
-    thead {
-      background-color: #009879;
-      color: #ffffff;
-      text-align: left;
-      height: 25px;
-      font-weight: bold;
-    }
-    tbody {
-      tr {
-        text-align: center;
-    }
-    td {
-      padding: 12px 15px;
-      border-right: 1px solid #dddddd;
-      border-bottom: 1px solid #dddddd;
-      :last-child {
-        border-right: 0;
-      }
-    }
-  }
-`;
+export function TableView({ data }: { data: (curencyInfo | null)[] }) {
+  return (
+    <Table>
+      <table>
+        <thead>
+          <tr>
+            {Object.values(columns).map((item, index) => (
+              <th key={index}>{item}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data?.map(
+            (countryInfo, index) =>
+              countryInfo && (
+                <tr key={index}>
+                  <td>{countryInfo?.Country}</td>
+                  <td>{countryInfo?.Currency}</td>
+                  <td>{countryInfo?.Code}</td>
+                  <td>{countryInfo?.Amount}</td>
+                  <td>{countryInfo?.Rate}</td>
+                </tr>
+              )
+          )}
+        </tbody>
+      </table>
+    </Table>
+  );
+}
