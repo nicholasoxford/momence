@@ -116,6 +116,7 @@ export const ButtonWrapper = styled.div`
   justify-content: center;
   align-items: right;
   width: 200px;
+  padding-top: 20px;
   button {
     display: inline-block;
     color: white;

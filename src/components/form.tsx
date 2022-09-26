@@ -89,7 +89,7 @@ export function Form({
             {<Message>{inputError} </Message>}
           </InputWrapper>
           <InputWrapper>
-            <Label htmlFor="label">Choose Country</Label>
+            <Label htmlFor="label">Country From</Label>
             <Select disabled>
               <option value="grapefruit"> 🇨🇿 Czech Republic</option>
             </Select>
@@ -98,7 +98,7 @@ export function Form({
         </GridWrapper>
         <GridWrapper>
           <InputWrapper>
-            <Label htmlFor="label">Convert to</Label>
+            <Label htmlFor="label">Country To</Label>
             <Select name="country">
               {countryAndCurrencyList?.map((info, index) => (
                 <option key={index} value={info.Country}>

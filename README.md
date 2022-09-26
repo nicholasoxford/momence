@@ -9,3 +9,10 @@ I am so used to Tailwinds and Next.js, that getting started with styled componen
 The next steps of this project would be more error handling, and optimistic UI.
 
 I am happy with the results, and how I was able to use typescript to make my life better.
+
+# Run the project
+
+```bash
+npm install
+npm start
+```
