@@ -10,7 +10,7 @@ const columns: columnHeaders = {
   Code: "Code",
   Amount: "Amount",
   Rate: "Rate",
-};
+} as const;
 
 export function TableView({ data }: { data: (curencyInfo | null)[] }) {
   return (

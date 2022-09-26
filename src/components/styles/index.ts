@@ -8,6 +8,8 @@ import {
   Select,
   Message,
   Table,
+  Container,
+  ButtonWrapper,
 } from "./styles";
 
 export {
@@ -20,4 +22,6 @@ export {
   Select,
   Message,
   Table,
+  Container,
+  ButtonWrapper,
 };

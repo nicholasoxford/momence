@@ -1,56 +1,53 @@
-import styled from "styled-components";
-
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import { fetchUsers } from "./utils/function";
-import { Form, Spinner, TableView, S } from "./components";
+import { fetchCurrencyInfo } from "./utils/function";
+import { Form, Spinner, TableView } from "./components";
 import { useState } from "react";
+import { Container } from "./components/styles";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <S.Title>Momence Interview </S.Title>
       <Main></Main>
     </QueryClientProvider>
   );
 }
 
 function Main() {
-  let { data, status, isLoading } = useQuery("repoData", fetchUsers);
+  let { data, isLoading, error } = useQuery("repoData", fetchCurrencyInfo);
   const [currencyConversion, setCurrencyConversion] = useState({
-    country: "",
-    currency: "",
-    amount: 0,
-    rate: 0,
+    fromCurrencyAmmount: "",
+    toCurrencyAmount: "",
   });
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-      }}
-    >
-      <h2>Czech National Bank</h2>
-      <p>Status: {status}</p>
+    <Container>
+      <h2>Czech National Bank Currency Converter</h2>
       {isLoading && <Spinner></Spinner>}
+      {error ? <div>Something went wrong</div> : null}
       {data && (
         <>
           {" "}
           <Form
             countryAndCurrencyList={data?.map((info) => {
               return {
-                country: info?.Country || "",
-                currency: info?.Currency || "",
+                Code: info?.Code || "",
+                Country: info?.Country || "",
+                Rate: info?.Rate || "",
               };
             })}
+            setResultData={setCurrencyConversion}
           ></Form>
+          {currencyConversion.fromCurrencyAmmount && (
+            <strong>
+              {currencyConversion.fromCurrencyAmmount} is equal to{" "}
+              {currencyConversion.toCurrencyAmount}
+            </strong>
+          )}
           <TableView data={data} />
         </>
       )}
-    </div>
+    </Container>
   );
 }
 export default App;

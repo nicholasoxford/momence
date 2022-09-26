@@ -8,7 +8,12 @@ export const FormGroup = styled.div`
   align-items: center;
   justify-items: center;
 `;
-
+export const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
 export const Table = styled.div`
   div {
     height: 500px;
@@ -104,4 +109,25 @@ export const Title = styled.h1`
   font-size: 1.5em;
   text-align: center;
   color: palevioletred;
+`;
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: right;
+  width: 200px;
+  button {
+    display: inline-block;
+    color: white;
+    font-size: 1em;
+    padding: 0.25em 1em;
+    border: 1px solid #11457e;
+    border-radius: 3px;
+    background-color: #11457e;
+    display: block;
+    max-width: 100px;
+
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 `;

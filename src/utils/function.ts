@@ -1,6 +1,7 @@
 import { curencyInfo } from "./types";
 
-export const fetchUsers = async () => {
+// Function we pass into react query
+export const fetchCurrencyInfo = async () => {
   const res = await fetch("/daily.txt");
   const textInfo = await res.text();
   const textArray = textInfo.split(/\r?\n/);
@@ -26,14 +27,11 @@ export const fetchUsers = async () => {
   return result?.filter((element) => element !== null);
 };
 
+// I love built in browser APIs
 export function formatNumberToCurrency(amount: number, country: string) {
   const formatterInternal = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: country,
-
-    // These options are needed to round to whole numbers if that's what you want.
-    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
   });
   return formatterInternal.format(amount);
 }

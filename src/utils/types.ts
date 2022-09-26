@@ -8,6 +8,9 @@ export type curencyInfo = {
   Rate: string;
 };
 
+// Creating prop types based on parent types
+export type countryPropInfo = Omit<curencyInfo, "Amount" | "Currency">;
+
 // This type would be useful if another key was added to the response, i.e. Country|Currency|Amount|Code|Rate|Debt
 export type extractData<currencyInfo extends string> =
   currencyInfo extends `${infer Country}|${infer Currency}|${infer Amount}|${infer Code}|${infer Rate}`

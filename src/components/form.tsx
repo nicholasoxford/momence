@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { formatNumberToCurrency } from "../utils/function";
+import { countryPropInfo } from "../utils/types";
 import { Button } from "./button";
 import {
   FormGroup,
@@ -13,8 +14,15 @@ import {
 
 export function Form({
   countryAndCurrencyList,
+  setResultData,
 }: {
-  countryAndCurrencyList: { country: string; currency: string }[] | undefined;
+  countryAndCurrencyList: countryPropInfo[] | undefined;
+  setResultData: React.Dispatch<
+    React.SetStateAction<{
+      fromCurrencyAmmount: string;
+      toCurrencyAmount: string;
+    }>
+  >;
 }) {
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState("");
@@ -29,8 +37,32 @@ export function Form({
     };
     const amount = Number(result.amount.value);
     const country = result.country.value;
+
+    // validate input amount is a number
     if (!isNaN(amount)) {
-      console.log(formatNumberToCurrency(amount, country));
+      const countryInfo = countryAndCurrencyList?.find(
+        (item) => item.Country === country
+      );
+      if (!countryInfo) return;
+
+      // Format currency amounts to base country
+      // Hard coding the Czech Republic as the base currency
+      const fromCurrencyAmmount = formatNumberToCurrency(amount, "CZK");
+
+      // Convert amount to related country
+      const convertedAmount = amount / Number(countryInfo.Rate);
+
+      // Formatted calculated amount to related country
+      const toCurrencyAmount = formatNumberToCurrency(
+        convertedAmount,
+        countryInfo.Code
+      );
+
+      // return info
+      setResultData({
+        fromCurrencyAmmount,
+        toCurrencyAmount,
+      });
     }
   }
 
@@ -69,30 +101,15 @@ export function Form({
             <Label htmlFor="label">Convert to</Label>
             <Select name="country">
               {countryAndCurrencyList?.map((info, index) => (
-                <option key={index} value={info.country}>
-                  {info.country}
+                <option key={index} value={info.Country}>
+                  {info.Country}
                 </option>
               ))}
             </Select>
           </InputWrapper>
-          <Button type="submit" label="Convert"></Button>
+          <Button type="submit" label="Convert" error={inputError}></Button>
         </GridWrapper>
       </FormGroup>
     </form>
   );
 }
-
-// Was going to use an svg but it didn't look good
-// export const ImageWrapper = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   height: 100%;
-//   width: 100%;
-//   img {
-//     width: 30px;
-//     height: 30px;
-//     margin-top: 10px;
-//     margin-left: 10px;
-//   }
-// `;
